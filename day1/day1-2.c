@@ -8,7 +8,6 @@
 int NumLocations = 0;
 int Location1[MAX_LOCATIONS];
 int Location2[MAX_LOCATIONS];
-int Diff[MAX_LOCATIONS];
 
 
 void ReadInput(char *filename)
@@ -53,15 +52,6 @@ void ReadInput(char *filename)
 }
 
 
-int MyCompare(const void *a, const void *b)
-{
-    int aa = *(int *)a;
-    int bb = *(int *)b;
-
-    return (aa - bb);
-}
-
-
 void Usage(void)
 {
     printf("day1 <filename>\n");
@@ -69,21 +59,24 @@ void Usage(void)
 }
 
 
-void CalculateDiff(void)
+int CalcSimilarity(void)
 {
-    for (int i = 0; i < NumLocations; i++) {
-        Diff[i] = abs(Location1[i] - Location2[i]);
-    }
-}
+    int Similarity = 0;
 
-
-int SumDiffs(void)
-{
-    int Sum = 0;
     for (int i = 0; i < NumLocations; i++) {
-        Sum += Diff[i];
+
+        int count = 0;
+        
+        for (int j = 0; j < NumLocations; j++) {
+            if (Location1[i] == Location2[j]) {
+                count++;
+            }
+        }
+
+        Similarity += (count * Location1[i]);
     }
-    return Sum;
+
+    return Similarity;
 }
 
 
@@ -91,7 +84,7 @@ int main (int argc, char *argv[])
 {
     //------------------
     int rc;
-    int Sum;
+    int Similarity;
     //------------------
 
     if (argc < 2) {
@@ -99,12 +92,10 @@ int main (int argc, char *argv[])
     }
 
     ReadInput(argv[1]);
-    qsort(Location1, NumLocations, sizeof(int), MyCompare);
-    qsort(Location2, NumLocations, sizeof(int), MyCompare);
-    CalculateDiff();
-    Sum = SumDiffs();
 
-    printf("What is the total distance between your lists? Ans: %d\n", Sum);
+    Similarity = CalcSimilarity();
+
+    printf("Similarity between lists? Ans: %d\n", Similarity);
     
     return 0;
 }
