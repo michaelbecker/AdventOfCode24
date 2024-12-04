@@ -5,13 +5,13 @@
 
 
 #define MAX_LOCATIONS 2000
-int NumLocations = 0;
-int Location1[MAX_LOCATIONS];
-int Location2[MAX_LOCATIONS];
-int Diff[MAX_LOCATIONS];
+int NumReports = 0;
+int Location1[MAX_REPORTS];
+int Location2[MAX_REPORTS];
+int Diff[MAX_REPORTS];
 
 
-void ReadInput(char *filename)
+void ReadReport(char *filename)
 {
     //-------------------
     FILE *fp;
@@ -29,19 +29,19 @@ void ReadInput(char *filename)
         if (buffer == fgets(buffer, sizeof(buffer), fp)) {
             
             p = strtok(buffer, " \t\n");
-            Location1[NumLocations] = atoi(p);
-            if (Location1[NumLocations] < 0) {
+            Location1[NumReports] = atoi(p);
+            if (Location1[NumReports] < 0) {
                 printf("Error conferting location input %s\n", p);
             }
 
             p = strtok(NULL, " \t\n");
-            Location2[NumLocations] = atoi(p);
-            if (Location2[NumLocations] < 0) {
+            Location2[NumReports] = atoi(p);
+            if (Location2[NumReports] < 0) {
                 printf("Error conferting location input %s\n", p);
             }
             
-            NumLocations++;
-            if (NumLocations >= (MAX_LOCATIONS - 1)) {
+            NumReports++;
+            if (NumReports >= (MAX_REPORTS - 1)) {
                 printf("Too many locations found!\n");
                 exit (-1);
             }
@@ -71,7 +71,7 @@ void Usage(void)
 
 void CalculateDiff(void)
 {
-    for (int i = 0; i < NumLocations; i++) {
+    for (int i = 0; i < NumReports; i++) {
         Diff[i] = abs(Location1[i] - Location2[i]);
     }
 }
@@ -80,7 +80,7 @@ void CalculateDiff(void)
 int SumDiffs(void)
 {
     int Sum = 0;
-    for (int i = 0; i < NumLocations; i++) {
+    for (int i = 0; i < NumReports; i++) {
         Sum += Diff[i];
     }
     return Sum;
@@ -98,9 +98,9 @@ int main (int argc, char *argv[])
         Usage();
     }
 
-    ReadInput(argv[1]);
-    qsort(Location1, NumLocations, sizeof(int), MyCompare);
-    qsort(Location2, NumLocations, sizeof(int), MyCompare);
+    ReadReport(argv[1]);
+    qsort(Location1, NumReports, sizeof(int), MyCompare);
+    qsort(Location2, NumReports, sizeof(int), MyCompare);
     CalculateDiff();
     Sum = SumDiffs();
 
